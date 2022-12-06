@@ -51,7 +51,7 @@ body{
 .pipeBottom{
     position: absolute;
     bottom: 0;
-    top: calc(100vh - (var(--hole-top) * 1px) + 150px);
+    top: calc(100vh - (var(--hole-top) * 1px) + 120px);
     width: 100%;
     background-color: blue;
 }
