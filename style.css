@@ -32,23 +32,28 @@ body{
     z-index: 1;
 }
 
-.pipe{
-    --right: 0;
+.allPipe{
     position: absolute;
     top: 0;
     bottom: 0;
-    right: calc(var(--right) * 1px);
+    right: calc(var(--piperight) * 1px);
     width: 10rem;
-    background-color: green ;
 }
 
-.hole{
+.pipeTop{
     position: absolute;
     top: 0;
+    bottom: calc(var(--hole-top) * 1px);
     width: 100%;
-    height: 150px;
-    background-color: white;
-    top: calc(var(--top) * 1px);
+    background-color: blue;
+}
+
+.pipeBottom{
+    position: absolute;
+    bottom: 0;
+    top: calc(100vh - (var(--hole-top) * 1px) + 150px);
+    width: 100%;
+    background-color: blue;
 }
 
 .displayCounter{
@@ -70,14 +75,15 @@ body{
         font-size: 2.5rem;
     }
     
+    .allPipe{
+        width: 4rem;
+
+    }
+
     .displayCounter{
         font-size: 2.5rem;
     }
     
-    .pipe{
-        width: 4rem;
-    }
-
     .bird{
         width: 2rem;
         height: 2rem;
@@ -86,6 +92,5 @@ body{
         z-index: 1;
     }
 }
-
 
 

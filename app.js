@@ -25,9 +25,9 @@ function lose(){
 }
 
 function updateLoop(){
-    gravity()
-    updatePipe()
-    if(checkloose()) return lose() 
+    gravity();
+    updatePipe();
+    if (checklose()) return lose()
     requestAnimationFrame(updateLoop)
 }
 
@@ -45,6 +45,10 @@ function setupBird(){
     setBirdTop(innerHeight / 2)
     document.removeEventListener("keydown", jump)
     document.addEventListener("keydown", jump)
+    pipes.forEach(pipe => {
+        pipe.remove()
+    })
+    counter = 0;
 }
 
 function getBirdTop(){
@@ -75,72 +79,95 @@ function birdEndRect(){
     return bird.getBoundingClientRect()
 }
 
-function checkloose(){
+function checklose(){
     const birdOutside = birdEndRect()
+    const insidePipe = getPipeRects().some(rect => isCollision(birdOutside, rect))
     const outside = birdOutside.top < 0 || birdOutside.bottom > innerHeight
-    return outside
+    return outside || insidePipe
+}
+
+function isCollision(rect1, rect2) {
+    return (
+      rect1.left < rect2.right &&
+      rect1.top < rect2.bottom &&
+      rect1.right > rect2.left &&
+      rect1.bottom > rect2.top
+    )
 }
 
 //PIPE
 
-const PIPE_INTERVAL = 200;
-const pipes = [];
+const pipeInterval = 200;
 let timeSinceLastPipe = 0;
 let counter = 0;
+let pipes = [];
 
 function setupPipe(){
-    timeSinceLastPipe = PIPE_INTERVAL;
-    counter = 0;
-    pipes.forEach(pipe => pipe.remove())
+    timeSinceLastPipe = pipeInterval
 }
 
 function updatePipe(){
     timeSinceLastPipe++
-    if (timeSinceLastPipe > PIPE_INTERVAL){
-        timeSinceLastPipe = 0
+    if(timeSinceLastPipe > pipeInterval){
+        timeSinceLastPipe = 0;
         createPipe()
     }
-
+    
     pipes.forEach(pipe => {
-        pipe.right += 5;
+        pipe.right = pipe.right + 5;
         if(pipe.right > innerWidth){
             counter++
-            return pipe.remove()
+            pipe.remove()
         }
         display()
     })
-} 
+}
 
 function display(){
     displayCounter.innerHTML = counter
 }
 
 function createPipe(){
-    const pipeElem = document.createElement("div");
-    const hole = document.createElement("div");
-    hole.classList.add("hole"); 
-    hole.style.setProperty("--top", randomHolePosition())
-    pipeElem.appendChild(hole);
-    pipeElem.classList.add("pipe")
+    const allPipe = document.createElement("div");
+    const pipeTop = document.createElement("div");
+    const pipeBottom = document.createElement("div");
+    pipeTop.classList.add("pipeTop");
+    pipeBottom.classList.add("pipeBottom");
+    allPipe.append(pipeTop);
+    allPipe.append(pipeBottom);
+    allPipe.classList.add("allPipe");
+    allPipe.style.setProperty("--hole-top", random(120 * 1.5, innerHeight - 150 * 0.5))
     const pipe = {
         get right(){
-            return parseFloat(getComputedStyle(pipeElem).getPropertyValue("--right"))
+            return parseFloat(getComputedStyle(allPipe).getPropertyValue("--piperight"))
         },
         set right(value){
-            pipeElem.style.setProperty("--right", value)
+            allPipe.style.setProperty("--piperight", value)
         },
         remove(){
-            pipeElem.remove()
+            allPipe.remove()
         },
-    }
-    pipe.right= -200;
-    document.body.appendChild(pipeElem)
+        rects(){
+            return [
+                pipeTop.getBoundingClientRect(),
+                pipeBottom.getBoundingClientRect()
+            ]
+        }
+    } 
+    pipe.right = -200
+    document.body.append(allPipe)
     pipes.push(pipe)
 }
 
-function randomHolePosition(){
-    return (Math.random() * (innerHeight - 250))
+function random(min, max){
+    return Math.floor(Math.random() * (max - min + 1) + min)
 }
+
+function getPipeRects(){
+    return pipes.flatMap(pipe => pipe.rects())
+}
+
+
 
 
  
