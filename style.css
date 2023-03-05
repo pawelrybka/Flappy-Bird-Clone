@@ -24,7 +24,7 @@ body{
     --top: -200;
     width: 3rem;
     height: 3rem;
-    background-color: red;
+    background-color: green;
     border-radius: 50%;
     position: absolute;
     left: 200px;
@@ -51,7 +51,7 @@ body{
 .pipeBottom{
     position: absolute;
     bottom: 0;
-    top: calc(100vh - (var(--hole-top) * 1px) + 120px);
+    top: calc(100vh - (var(--hole-top) * 1px) + 250px);
     width: 100%;
     background-color: blue;
 }
